@@ -3,10 +3,10 @@ A basic framework for a responsive Webex Bot, utilising OpenAI via n8n
 
 ![image](https://github.com/user-attachments/assets/59fb46a2-140b-4556-aefa-120436855e41)
 
-Navigate to developer.webex.com log in and select "Create a Bot", providing a Name and Username
-![image](https://github.com/user-attachments/assets/121a43c6-77df-46b7-8b94-3fdc68136476)
 
-Once registered, record your Bot Token (Bearer Token) and your Bot ID
+
+Navigate to developer.webex.com log in and select "Create a Bot", providing a Name and Username. Once registered, record your Bot Token (Bearer Token) and your Bot ID
+![image](https://github.com/user-attachments/assets/121a43c6-77df-46b7-8b94-3fdc68136476)
 
 Create a Webhook node in n8n. This extracts the message ID of the message the Webhook heard. It will generate a unique URL. Note there are different URLs for Test and Prod, and you will need separate Webhooks for both URLs if you are testing too. 
 ![image](https://github.com/user-attachments/assets/099a7ced-122c-46e2-bcec-f118ecd8bb9e)

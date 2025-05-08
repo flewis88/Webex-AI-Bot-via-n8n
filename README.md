@@ -35,7 +35,9 @@ Create a HTTP Request and enter details as pictured below, with a roomId for the
 ![image](https://github.com/user-attachments/assets/2953e9c2-b0d2-452c-812b-1605f718806d) ![image](https://github.com/user-attachments/assets/1c53c7db-825e-4a82-b484-6f576fc5f608)
 
 Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to create the Webhook which listens to messages tagging your Bot. Input your bearer token at the top
+
 ![image](https://github.com/user-attachments/assets/ed6900bc-8d81-4880-8787-8130282e4bdc)
+
 Name: as you wish
 Resource: messages
 Event: Created

@@ -15,6 +15,12 @@ HTTP Method: POST
 Auth: none
 Respond: Immediately
 
+Go to https://developer.webex.com/my-apps/new and select "Integration". Create an integration in compliance with https://docs.n8n.io/integrations/builtin/credentials/ciscowebex/ 
+Set the Redirect URI as https://<your n8n host>/rest/oauth2-credential/callback
+
+![image](https://github.com/user-attachments/assets/0ef455b6-414c-436f-9ac7-cf662218dfd7)
+
+
 Create a "Webex by Cisco" node to pull the message contents
 
 ![image](https://github.com/user-attachments/assets/893ffddd-657d-4cf7-8b56-31b6f527f16d)

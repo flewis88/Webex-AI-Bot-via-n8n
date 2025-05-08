@@ -16,12 +16,15 @@ Auth: none
 Respond: Immediately
 
 Create a "Webex by Cisco" node to pull the message contents
+
 ![image](https://github.com/user-attachments/assets/893ffddd-657d-4cf7-8b56-31b6f527f16d)
 
 This will use the Message ID number received by the Webhook, to pull the actual message contents.
 
 Create a "AI Agent" node
+
 ![image](https://github.com/user-attachments/assets/4b73bee3-af32-40d7-ac8f-03ab10bf8d26)
+
 This format only passes the message received by the previous node, but further parameters can be passed as needed
 
 Attach your selected model to the "Basic LLM Chain" node, ensuring that you create the necessary auth with your OpenAI API

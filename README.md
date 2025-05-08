@@ -10,12 +10,14 @@ Navigate to developer.webex.com log in and select "Create a Bot", providing a Na
 
 Create a Webhook node in n8n. This extracts the message ID of the message the Webhook heard. It will generate a unique URL. Note there are different URLs for Test and Prod, and you will need separate Webhooks for both URLs if you are testing too. 
 ![image](https://github.com/user-attachments/assets/099a7ced-122c-46e2-bcec-f118ecd8bb9e)
+
 HTTP Method: POST
 Auth: none
 Respond: Immediately
 
 Create a "Webex by Cisco" node to pull the message contents
 ![image](https://github.com/user-attachments/assets/893ffddd-657d-4cf7-8b56-31b6f527f16d)
+
 This will use the Message ID number received by the Webhook, to pull the actual message contents.
 
 Create a "AI Agent" node

@@ -49,26 +49,38 @@ Create a HTTP Request and enter details as pictured below, with a roomId for the
 
 ![image](https://github.com/user-attachments/assets/2953e9c2-b0d2-452c-812b-1605f718806d) <img width="502" height="700" alt="image" src="https://github.com/user-attachments/assets/8b5d8c5f-76d5-4445-8ad4-d3a0c0156fff" />
 
-Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to create the 4 Webhooks. 2 which listen to messages tagging your Bot; 2 which listen for direct messages. Input your bearer token at the top
+Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to create the 4 Webhooks. 2 which listen to messages tagging your Bot; 2 which listen for direct messages. Input your bearer token at the top. Details for each of the 4 are listed below
 
 ![image](https://github.com/user-attachments/assets/ed6900bc-8d81-4880-8787-8130282e4bdc) <img width="511" height="496" alt="image" src="https://github.com/user-attachments/assets/a84c9a02-210b-48f3-b126-b5f2fc6847a3" />
 
 ```
 Name: Bot Direct Message
-Target URL: The one from inside your Webhook node
+Target URL: The Production URL from inside your Direct Messaged Webhook node
 Resource: messages
 Event: Created
 Filter: roomType=direct
-# Repeat with the TEST & PRODUCTION URLs circled above
+```
+```
+Name: Bot Direct Message TEST
+Target URL: The Test URL from inside your Direct Messaged Webhook node
+Resource: messages
+Event: Created
+Filter: roomType=direct
 ```
 
 ```
 Name: Bot Tagged
-Target URL: The one from inside your Webhook node
+Target URL: The Production URL from inside your Webhook node
 Resource: messages
 Event: Created
 Filter: mentionedPeople=me
-# Repeat with the TEST & PRODUCTION URLs circled above
+```
+```
+Name: Bot Tagged TEST
+Target URL: The Test URL from inside your Webhook node
+Resource: messages
+Event: Created
+Filter: mentionedPeople=me
 ```
 
 Press "RUN" and you should see an HTTP 200:OK response to indicate that the Webhook is up and persistent

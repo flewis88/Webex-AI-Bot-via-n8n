@@ -18,11 +18,11 @@ Respond: Immediately
 
 After the Webhook nodes, we have two "Switch" nodes. One will halt the workflow if the message received came from the bot itself, so ensure you update this node to include the @webex.bot address for your bot.
 
-<img width="505" height="257" alt="image" src="https://github.com/user-attachments/assets/9cfc4bff-9d07-45ca-82d7-6506e34bb627" />
+<img width="512" height="367" alt="image" src="https://github.com/user-attachments/assets/92f77abb-06be-4782-92dc-1a173db08486" />
 
 The next "Switch" node will only continue the workflow if the sender is on an approved list, so put your own email and anyone else approved to use the bot in the array of this node.
 
-<img width="507" height="284" alt="image" src="https://github.com/user-attachments/assets/4c159db8-5c1f-403b-bfa8-bb53e4b0b2b8" />
+<img width="507" height="380" alt="image" src="https://github.com/user-attachments/assets/ae465faf-242f-455d-a95b-4bd3d4f2f13d" />
 
 Next is a HTTP Request node which will GET the message contents based on the ID received from the Webhook.
 
@@ -73,5 +73,9 @@ Press "RUN" and you should see an HTTP 200:OK response to indicate that the Webh
 Once this is complete, you should be able to add your bot to a space, send a message that tags them, or message them directly, and recieve a response in the relevant room
 
 ![image](https://github.com/user-attachments/assets/50332951-cdd8-4bca-9b90-f4a40eeda712)
+
+
+With these basics working, you can expand your workflow endlessly, adding things like MCP tools, or a PostgreSQL database for chat history and RAG
+<img width="1840" height="868" alt="image" src="https://github.com/user-attachments/assets/28feaa74-20e8-4fca-81f2-facb7fb22f44" />
 
 

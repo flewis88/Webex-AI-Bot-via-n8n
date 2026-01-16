@@ -1,14 +1,14 @@
 # Webex-AI-Bot-via-n8n
-A basic framework for a responsive Webex Bot, utilising OpenAI via n8n
+A basic framework for a responsive Webex Bot, utilising OpenAI via n8n. JSON template is attached.
 
-![image](https://github.com/user-attachments/assets/59fb46a2-140b-4556-aefa-120436855e41)
+<img width="1630" height="556" alt="image" src="https://github.com/user-attachments/assets/448e36ba-4b40-4c11-903f-eeb20bcb2346" />
 
 
+Navigate to developer.webex.com log in and select "Create a Bot", providing a Name and Username. Once registered, record your Bot Token (Bearer Token) and your Bot ID. The Bearer token will be input to a Custom Auth credential, in the format shown in the "Custom Auth" file.
 
-Navigate to developer.webex.com log in and select "Create a Bot", providing a Name and Username. Once registered, record your Bot Token (Bearer Token) and your Bot ID
 ![image](https://github.com/user-attachments/assets/121a43c6-77df-46b7-8b94-3fdc68136476)
 
-Create a Webhook node in n8n. This extracts the message ID of the message the Webhook heard. It will generate a unique URL. Note there are different URLs for Test and Prod, and you will need separate Webhooks for both URLs if you are testing too. 
+Create 2 Webhook nodes in n8n. This extracts the message ID of the message the Webhook heard. It will generate a unique URL. Note there are different URLs for Test and Prod, and you will need separate Webhooks for both URLs if you are testing too. We have 1 Webhook for where the bot is mentioned in a space, and another for where the bot is direct messaged.
 
 ![image](https://github.com/user-attachments/assets/099a7ced-122c-46e2-bcec-f118ecd8bb9e)
 
@@ -16,49 +16,61 @@ HTTP Method: POST
 Auth: none
 Respond: Immediately
 
-Go to https://developer.webex.com/my-apps/new and select "Integration". Create an integration in compliance with https://docs.n8n.io/integrations/builtin/credentials/ciscowebex/ 
-Set the Redirect URI as https://*your n8n host*/rest/oauth2-credential/callback 
-Once complete, hold onto these credentials, as they will be needed in the next step.
+After the Webhook nodes, we have two "Switch" nodes. One will halt the workflow if the message received came from the bot itself, so ensure you update this node to include the @webex.bot address for your bot.
 
-![image](https://github.com/user-attachments/assets/0ef455b6-414c-436f-9ac7-cf662218dfd7)
+<img width="505" height="257" alt="image" src="https://github.com/user-attachments/assets/9cfc4bff-9d07-45ca-82d7-6506e34bb627" />
 
+The next "Switch" node will only continue the workflow if the sender is on an approved list, so put your own email and anyone else approved to use the bot in the array of this node.
 
-Create a "Webex by Cisco" node to pull the message contents.
+<img width="507" height="284" alt="image" src="https://github.com/user-attachments/assets/4c159db8-5c1f-403b-bfa8-bb53e4b0b2b8" />
 
-![image](https://github.com/user-attachments/assets/893ffddd-657d-4cf7-8b56-31b6f527f16d)
+Next is a HTTP Request node which will GET the message contents based on the ID received from the Webhook.
 
-This will use the Message ID number received by the Webhook, to pull the actual message contents.
+<img width="517" height="433" alt="image" src="https://github.com/user-attachments/assets/e4dcee80-75b2-4b99-ba83-df6f2f90b5b1" />
 
-Click Create a new Credential, and use the details from the previous step
+Click Create a new Credential, select Custom Auth, and then input your bearer token in the format shared in the "Custom Auth" file.
 
-![image](https://github.com/user-attachments/assets/3dd37a7d-9ba5-4560-bb29-f45a92a2c3fd)
+<img width="1483" height="578" alt="image" src="https://github.com/user-attachments/assets/0dcc7293-ced6-459a-a09c-83aa08ace418" />
 
+Next I created a sessionId JSON object, which is necessary for more complex workflows with chat histories and multiple users.
+
+<img width="509" height="669" alt="image" src="https://github.com/user-attachments/assets/101d73df-94e4-4f62-a938-08c041dee129" />
 
 Create a "AI Agent" node
 
-![image](https://github.com/user-attachments/assets/4b73bee3-af32-40d7-ac8f-03ab10bf8d26)
+<img width="505" height="508" alt="image" src="https://github.com/user-attachments/assets/698e6ed9-9c88-436b-8b70-997738d15bbe" />
 
-This format only passes the message received by the previous node, but further parameters can be passed as needed
+Attach your selected model to the "Chat Model" endpoint, ensuring that you create the necessary auth with your OpenAI API
 
-Attach your selected model to the "Basic LLM Chain" node, ensuring that you create the necessary auth with your OpenAI API
 ![image](https://github.com/user-attachments/assets/2bb28f0f-2ed7-42ca-84da-12d3c2f7eb5c)
 
 
-Create a HTTP Request and enter details as pictured below, with a roomId for the relevant space. You can pass this in as a JSON object from the initial message's origin, however I'm having some challenges with this that we've not overcome yet.
-![image](https://github.com/user-attachments/assets/2953e9c2-b0d2-452c-812b-1605f718806d) ![image](https://github.com/user-attachments/assets/1c53c7db-825e-4a82-b484-6f576fc5f608)
+Create a HTTP Request and enter details as pictured below, with a roomId for the relevant space.
 
-Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to create the Webhook which listens to messages tagging your Bot. Input your bearer token at the top
+![image](https://github.com/user-attachments/assets/2953e9c2-b0d2-452c-812b-1605f718806d) <img width="502" height="700" alt="image" src="https://github.com/user-attachments/assets/8b5d8c5f-76d5-4445-8ad4-d3a0c0156fff" />
 
-![image](https://github.com/user-attachments/assets/ed6900bc-8d81-4880-8787-8130282e4bdc)
+Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to create the 4 Webhooks. 2 which listen to messages tagging your Bot; 2 which listen for direct messages. Input your bearer token at the top
 
-Name: as you wish
+![image](https://github.com/user-attachments/assets/ed6900bc-8d81-4880-8787-8130282e4bdc) <img width="511" height="496" alt="image" src="https://github.com/user-attachments/assets/a84c9a02-210b-48f3-b126-b5f2fc6847a3" />
+
+
+Name: Bot Direct Message
+Target URL: The one from inside your Webhook node
+Resource: messages
+Event: Created
+Filter: roomType=direct
+(Repeat with the TEST & PRODUCTION URLs circled above)
+
+Name: Bot Tagged
+Target URL: The one from inside your Webhook node
 Resource: messages
 Event: Created
 Filter: mentionedPeople=me
+(Repeat with the TEST & PRODUCTION URLs circled above)
 
 Press "RUN" and you should see an HTTP 200:OK response to indicate that the Webhook is up and persistent
 
-Once this is complete, you should be able to add your bot to a space, send a message that tags them, and you should recieve a response in the relevant room
+Once this is complete, you should be able to add your bot to a space, send a message that tags them, or message them directly, and recieve a response in the relevant room
 
 ![image](https://github.com/user-attachments/assets/50332951-cdd8-4bca-9b90-f4a40eeda712)
 

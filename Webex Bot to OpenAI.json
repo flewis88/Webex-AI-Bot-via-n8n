@@ -1,0 +1,377 @@
+{
+  "name": "Webex Bot to OpenAI",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        752,
+        144
+      ],
+      "id": "cb7bfa72-4154-4e2a-b6c8-0e1bf9ed32ca",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "8HpvxKNuRTzEX8Ih",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are a helpful & concise virtual assistant. The current date and time is {{new Date().toLocaleString()}}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        816,
+        -80
+      ],
+      "id": "a7f4b6ef-a148-46e8-8c49-cdb0fcbfac18",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "CREATEYOUROWN1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -96
+      ],
+      "id": "11f3bf32-8dd9-43a0-b037-e0cc85104386",
+      "name": "DirectMessaged",
+      "webhookId": "OBFUSCATED"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "CREATEYOUROWN2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        144,
+        48
+      ],
+      "id": "3ef61b50-175f-4dbd-a529-45bc229c128e",
+      "name": "Mentioned",
+      "webhookId": "OBFUSCATED"
+    },
+    {
+      "parameters": {
+        "url": "=https://webexapis.com/v1/messages/{{ $json.body.data.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        128
+      ],
+      "id": "a34342d5-5a1c-41e2-a658-035706125205",
+      "name": "HTTP GetMessage",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "VfBG6seh6IrVmA7n",
+          "name": "Webex Bot Demo Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webexapis.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "roomId",
+              "value": "={{ $json.roomId || $node[\"HTTP GetMessage\"].json[\"roomId\"] }}"
+            },
+            {
+              "name": "markdown",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        -80
+      ],
+      "id": "b2237d24-8138-4573-b6e3-aa2e347befec",
+      "name": "AuthResponse",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "VfBG6seh6IrVmA7n",
+          "name": "Webex Bot Demo Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3d4512d0-32d2-4400-9a19-7a3b53252463",
+              "name": "sessionId",
+              "value": "={{ $node[\"HTTP GetMessage\"].json[\"roomId\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        128
+      ],
+      "id": "cf08e538-ed56-4b81-99af-11eb84832c1b",
+      "name": "AddSessionID"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.personEmail }}",
+                    "rightValue": "ENTERYOURBOTADDRESS@webex.bot",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    },
+                    "id": "acaa5527-124e-438a-b62c-2f53373f8159"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        400,
+        -96
+      ],
+      "id": "92600472-ae17-4cc1-a30e-6de85f909304",
+      "name": "Drop If Self",
+      "notes": "Stops execution if message received is from the bot itself"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "=[\"authoriseduser1@cisco.com\", \"authoriseduser2@cisco.com\", \"authoriseduser3@cisco.com\"]",
+                    "rightValue": "={{ $json.body.data.personEmail }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "acaa5527-124e-438a-b62c-2f53373f8159"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        -96
+      ],
+      "id": "0fd82e1a-db19-44dc-86e7-09c4b651a248",
+      "name": "Auth Users",
+      "notes": "Allows authorised users only"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        144
+      ],
+      "id": "cf68becf-c108-4005-a996-689670a6b331",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AuthResponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DirectMessaged": {
+      "main": [
+        [
+          {
+            "node": "Drop If Self",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mentioned": {
+      "main": [
+        [
+          {
+            "node": "Drop If Self",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP GetMessage": {
+      "main": [
+        [
+          {
+            "node": "AddSessionID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AuthResponse": {
+      "main": [
+        []
+      ]
+    },
+    "AddSessionID": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drop If Self": {
+      "main": [
+        [
+          {
+            "node": "Auth Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auth Users": {
+      "main": [
+        [
+          {
+            "node": "HTTP GetMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "22e043a7-a560-4ea9-bc17-ba28ef57eda1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "OBFUSCATED"
+  },
+  "id": "hZQi6R7hWeR0rrIp",
+  "tags": [
+    {
+      "updatedAt": "2025-05-21T02:30:18.045Z",
+      "createdAt": "2025-05-21T02:30:18.045Z",
+      "id": "m67L1atvsu4nnYxB",
+      "name": "template"
+    }
+  ]
+}

@@ -53,20 +53,23 @@ Navigate to https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook to
 
 ![image](https://github.com/user-attachments/assets/ed6900bc-8d81-4880-8787-8130282e4bdc) <img width="511" height="496" alt="image" src="https://github.com/user-attachments/assets/a84c9a02-210b-48f3-b126-b5f2fc6847a3" />
 
-
+```
 Name: Bot Direct Message
 Target URL: The one from inside your Webhook node
 Resource: messages
 Event: Created
 Filter: roomType=direct
-(Repeat with the TEST & PRODUCTION URLs circled above)
+# Repeat with the TEST & PRODUCTION URLs circled above
+```
 
+```
 Name: Bot Tagged
 Target URL: The one from inside your Webhook node
 Resource: messages
 Event: Created
 Filter: mentionedPeople=me
-(Repeat with the TEST & PRODUCTION URLs circled above)
+# Repeat with the TEST & PRODUCTION URLs circled above
+```
 
 Press "RUN" and you should see an HTTP 200:OK response to indicate that the Webhook is up and persistent
 
